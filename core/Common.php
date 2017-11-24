@@ -740,6 +740,21 @@ class Common
         return 'Unknown error';
     }
 
+    /**
+     * Ensures unserialize will only convert arrays and discard objects
+     *
+     * @param $string String to unserialize
+     * @return array  unserialized array
+     */
+    public static function secure_unserialize($string)
+    {
+        if (PHP_MAJOR_VERSION >= 7) {
+            return @unserialize($string, false);
+        }
+
+        return safe_unserialize($string);
+    }
+
     public static function stringEndsWith($haystack, $needle)
     {
         if ('' === $needle) {

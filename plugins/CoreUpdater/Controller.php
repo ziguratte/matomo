@@ -184,7 +184,7 @@ class Controller extends \Piwik\Plugin\Controller
         } elseif ($error) {
             $view = new View('@CoreUpdater/updateHttpError');
             $view->error = $error;
-            $view->feedbackMessages = safe_unserialize(Common::unsanitizeInputValue(Common::getRequestVar('messages', '', 'string', $_POST)));
+            $view->feedbackMessages = Common::secure_unserialize(Common::unsanitizeInputValue(Common::getRequestVar('messages', '', 'string', $_POST)));
         } else {
             $view = new View('@CoreUpdater/updateSuccess');
         }

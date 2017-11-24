@@ -1331,7 +1331,7 @@ class DataTable implements DataTableInterface, \IteratorAggregate, \ArrayAccess
     private function unserializeRows($serialized)
     {
         $serialized = str_replace(self::$previousRowClasses, self::$rowClassToUseForUnserialize, $serialized);
-        $rows = unserialize($serialized);
+        $rows = Common::secure_unserialize($serialized);
 
         if ($rows === false) {
             throw new Exception("The unserialization has failed!");
