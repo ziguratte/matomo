@@ -9,6 +9,8 @@
 namespace Piwik\Plugins\CoreHome;
 use Piwik\Columns\ComputedMetricFactory;
 use Piwik\Columns\MetricsList;
+use Piwik\IP;
+use Piwik\Piwik;
 use Piwik\Plugin\ArchivedMetric;
 use Piwik\Plugin\ComputedMetric;
 
@@ -34,8 +36,25 @@ class CoreHome extends \Piwik\Plugin
             'AssetManager.getJavaScriptFiles'        => 'getJsFiles',
             'AssetManager.filterMergedJavaScripts'   => 'filterMergedJavaScripts',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
-            'Metric.addComputedMetrics'              => 'addComputedMetrics'
+            'Metric.addComputedMetrics'              => 'addComputedMetrics',
+            'Request.initAuthenticationObject' => 'initAuthenticationObject',
         );
+    }
+
+    public function initAuthenticationObject()
+    {
+        $isApi = Piwik::getModule() === 'API' && (Piwik::getAction() == '' || Piwik::getAction() == 'index');
+
+        if ($isApi) {
+            // will be checked in API itself to make sure we return an API response in the proper format.
+            return;
+        }
+
+        $whitelist = new LoginWhitelist();
+        if ($whitelist->shouldCheckWhitelist()) {
+            $ip = IP::getIpFromHeader();
+            $whitelist->checkIsWhitelisted($ip);
+        }
     }
 
     public function addComputedMetrics(MetricsList $list, ComputedMetricFactory $computedMetricFactory)
@@ -359,6 +378,7 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_Delete';
         $translationKeys[] = 'General_Default';
         $translationKeys[] = 'General_LoadingData';
+        $translationKeys[] = 'General_Error';
         $translationKeys[] = 'General_ErrorRequest';
         $translationKeys[] = 'General_YourChangesHaveBeenSaved';
         $translationKeys[] = 'General_LearnMore';
@@ -380,5 +400,11 @@ class CoreHome extends \Piwik\Plugin
         $translationKeys[] = 'General_DoubleClickToChangePeriod';
         $translationKeys[] = 'General_Apply';
         $translationKeys[] = 'General_Period';
+        $translationKeys[] = 'CoreHome_ShortcutZenMode';
+        $translationKeys[] = 'CoreHome_ShortcutSegmentSelector';
+        $translationKeys[] = 'CoreHome_ShortcutWebsiteSelector';
+        $translationKeys[] = 'CoreHome_ShortcutCalendar';
+        $translationKeys[] = 'CoreHome_ShortcutSearch';
+        $translationKeys[] = 'CoreHome_ShortcutHelp';
     }
 }
