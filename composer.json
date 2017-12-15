@@ -83,10 +83,6 @@
                     "reference": "master"
                 }
             }
-        },
-        {
-            "type": "vcs",
-            "url": "http://github.com/Findus23/Sparkline"
         }
     ],
     "scripts": {
