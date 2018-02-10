@@ -1472,7 +1472,7 @@ Piwik_Transitions_Ajax.prototype.callTransitionsController = function (action, c
     }, 'get');
     ajaxRequest.setCallback(callback);
     ajaxRequest.setFormat('html');
-    ajaxRequest.send(false);
+    ajaxRequest.send();
 };
 
 Piwik_Transitions_Ajax.prototype.callApi = function (method, params, callback) {
@@ -1530,7 +1530,7 @@ Piwik_Transitions_Ajax.prototype.callApi = function (method, params, callback) {
             }
         }
     );
-    ajaxRequest.send(false);
+    ajaxRequest.send();
 };
 
 // --------------------------------------
