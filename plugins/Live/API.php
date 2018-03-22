@@ -72,6 +72,14 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasViewAccess($idSite);
         $model = new Model();
 
+        if (is_string($showColumns)) {
+            $showColumns = explode(',', $showColumns);
+        }
+
+        if (is_string($hideColumns)) {
+            $hideColumns = explode(',', $hideColumns);
+        }
+
         $counters = array();
 
         $hasVisits = true;
@@ -301,9 +309,13 @@ class API extends \Piwik\Plugin\API
     {
         Piwik::checkUserHasViewAccess($idSite);
 
+        if (empty($visitorId)) {
+            return new DataTable();
+        }
+
         $model = new Model();
-        $data = $model->queryLogVisits($idSite, false, false, false, 0, 1, $visitorId, false, 'ASC');
-        $dataTable = $this->makeVisitorTableFromArray($data);
+        list($rowCount, $data) = $model->queryLogVisits($idSite, false, false, false, 0, 1, $visitorId, false, 'ASC');
+        $dataTable = $this->makeVisitorTableFromArray($data, $rowCount);
         $this->addFilterToCleanVisitors($dataTable, $idSite, false, true);
 
         return $dataTable;
