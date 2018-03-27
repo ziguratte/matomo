@@ -8,6 +8,8 @@
  */
 namespace Piwik\Plugins\Actions\DataTable\Filter;
 
+use Piwik\Common;
+use Piwik\Config;
 use Piwik\DataTable\BaseFilter;
 use Piwik\DataTable\Row;
 use Piwik\DataTable;
@@ -34,6 +36,15 @@ class Actions extends BaseFilter
                 $url = $row->getMetadata('url');
                 if ($url) {
                     $row->setMetadata('segmentValue', urldecode($url));
+                }
+                $label = $row->getColumn('label');
+
+                if (Common::getRequestVar('flat', 0)) {
+                    $defaultName = Config::getInstance()->General['action_default_name'];
+                    if (substr($label, -strlen($defaultName)) == $defaultName) {
+                        $label = rtrim(substr($label, 0, -strlen($defaultName)), '/') . '/';
+                        $row->setColumn('label', $label);
+                    }
                 }
             }
         });
